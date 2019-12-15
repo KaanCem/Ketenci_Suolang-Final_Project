@@ -1,0 +1,2057 @@
+---
+title: "Json Files reading"
+output: html_document
+---
+```{r}
+#As we obtanied very large json files(more than 100 GB) that are unable to be read in R. Therefore, we spilt the json files by using online tools and sampled 100MB every day
+library(readtext)
+install.packages("stringr")
+library(stringr)
+library(stringi)
+#setwd("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019")
+
+#Steps for each day of Twitter data:
+#1) Split the large gson files by https://pinetools.com/split-files
+#2) In the splitting processes, choose the number of splitted files to be approximately original file size divided by 100 MB. This guarantees that each splitted piece is around 100 MB. This is a sufficiently small size to be read into R.
+#3) Out of all the splitted pieces, sample 10 of them by a systematic sampling approach. For example if there are 120 splitted pieces, take the splitted pieces indicated by .000, .012, .024, .036, .048, .060, .072, .084, .096 and .108.
+#4) Download these 10 sampled pieces.
+#5) Change the file. Replace the . in the file name with _ to ensure the computer does not treat the section after the . as a file extension name. Also change the last digits in the file name so that 000, 012, 024, 036, 048, 060, 072, 084, 096 and 108 becomes 1, 2, 3, 4, 5, 6, 7, 8, 9, 10. This allows consistency in the R code.
+#6) At the end of the file name, add .csv to convert the undefined file into a csv file.
+#7) Read these 10 csv files into R by readLines function and follow the below steps to obtain datasets with 4 columns of ID, tweet_text, tweet_location and tweet_time.
+
+#10_10_2019:
+#Next sample:
+t10_10_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_1.csv")
+t10_10_1<-as.data.frame(t10_10_1)
+t10_10_1$extra <- 0
+m10_10_1 <- matrix(ncol = 4, nrow = nrow(t10_10_1))
+m10_10_1[,1] <- 1:(nrow(m10_10_1))
+
+start_char <- regexpr(pattern = 'text', t10_10_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_1[,1], start_char, end_char)
+m10_10_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_1[,1], start_char, end_char)
+m10_10_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_1[,1], start_char, end_char)
+m10_10_1[,4] <- tweet_time
+
+colnames(m10_10_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_2.csv")
+t10_10_2<-as.data.frame(t10_10_2)
+t10_10_2$extra <- 0
+m10_10_2 <- matrix(ncol = 4, nrow = nrow(t10_10_2))
+m10_10_2[,1] <- 1:(nrow(m10_10_2))
+
+start_char <- regexpr(pattern = 'text', t10_10_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_2[,1], start_char, end_char)
+m10_10_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_2[,1], start_char, end_char)
+m10_10_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_2[,1], start_char, end_char)
+m10_10_2[,4] <- tweet_time
+
+colnames(m10_10_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_3.csv")
+t10_10_3<-as.data.frame(t10_10_3)
+t10_10_3$extra <- 0
+m10_10_3 <- matrix(ncol = 4, nrow = nrow(t10_10_3))
+m10_10_3[,1] <- 1:(nrow(m10_10_3))
+
+start_char <- regexpr(pattern = 'text', t10_10_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_3[,1], start_char, end_char)
+m10_10_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_3[,1], start_char, end_char)
+m10_10_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_3[,1], start_char, end_char)
+m10_10_3[,4] <- tweet_time
+
+colnames(m10_10_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_4.csv")
+t10_10_4<-as.data.frame(t10_10_4)
+t10_10_4$extra <- 0
+m10_10_4 <- matrix(ncol = 4, nrow = nrow(t10_10_4))
+m10_10_4[,1] <- 1:(nrow(m10_10_4))
+
+start_char <- regexpr(pattern = 'text', t10_10_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_4[,1], start_char, end_char)
+m10_10_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_4[,1], start_char, end_char)
+m10_10_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_4[,1], start_char, end_char)
+m10_10_4[,4] <- tweet_time
+
+colnames(m10_10_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_5.csv")
+t10_10_5<-as.data.frame(t10_10_5)
+t10_10_5$extra <- 0
+m10_10_5 <- matrix(ncol = 4, nrow = nrow(t10_10_5))
+m10_10_5[,1] <- 1:(nrow(m10_10_5))
+
+start_char <- regexpr(pattern = 'text', t10_10_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_5[,1], start_char, end_char)
+m10_10_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_5[,1], start_char, end_char)
+m10_10_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_5[,1], start_char, end_char)
+m10_10_5[,4] <- tweet_time
+
+colnames(m10_10_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_6.csv")
+t10_10_6<-as.data.frame(t10_10_6)
+t10_10_6$extra <- 0
+m10_10_6 <- matrix(ncol = 4, nrow = nrow(t10_10_6))
+m10_10_6[,1] <- 1:(nrow(m10_10_6))
+
+start_char <- regexpr(pattern = 'text', t10_10_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_6[,1], start_char, end_char)
+m10_10_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_6[,1], start_char, end_char)
+m10_10_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_6[,1], start_char, end_char)
+m10_10_6[,4] <- tweet_time
+
+colnames(m10_10_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_7.csv")
+t10_10_7<-as.data.frame(t10_10_7)
+t10_10_7$extra <- 0
+m10_10_7 <- matrix(ncol = 4, nrow = nrow(t10_10_7))
+m10_10_7[,1] <- 1:(nrow(m10_10_7))
+
+start_char <- regexpr(pattern = 'text', t10_10_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_7[,1], start_char, end_char)
+m10_10_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_7[,1], start_char, end_char)
+m10_10_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_7[,1], start_char, end_char)
+m10_10_7[,4] <- tweet_time
+
+colnames(m10_10_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_8.csv")
+t10_10_8<-as.data.frame(t10_10_8)
+t10_10_8$extra <- 0
+m10_10_8 <- matrix(ncol = 4, nrow = nrow(t10_10_8))
+m10_10_8[,1] <- 1:(nrow(m10_10_8))
+
+start_char <- regexpr(pattern = 'text', t10_10_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_8[,1], start_char, end_char)
+m10_10_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_8[,1], start_char, end_char)
+m10_10_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_8[,1], start_char, end_char)
+m10_10_8[,4] <- tweet_time
+
+colnames(m10_10_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_9.csv")
+t10_10_9<-as.data.frame(t10_10_9)
+t10_10_9$extra <- 0
+m10_10_9 <- matrix(ncol = 4, nrow = nrow(t10_10_9))
+m10_10_9[,1] <- 1:(nrow(m10_10_9))
+
+start_char <- regexpr(pattern = 'text', t10_10_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_9[,1], start_char, end_char)
+m10_10_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_9[,1], start_char, end_char)
+m10_10_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_9[,1], start_char, end_char)
+m10_10_9[,4] <- tweet_time
+
+colnames(m10_10_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_10_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_10_2019/tweets_10_10_2019_json_10.csv")
+t10_10_10<-as.data.frame(t10_10_10)
+t10_10_10$extra <- 0
+m10_10_10 <- matrix(ncol = 4, nrow = nrow(t10_10_10))
+m10_10_10[,1] <- 1:(nrow(m10_10_10))
+
+start_char <- regexpr(pattern = 'text', t10_10_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_10_10[,1], start_char, end_char)
+m10_10_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_10_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_10_10[,1], start_char, end_char)
+m10_10_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_10_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_10_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_10_10[,1], start_char, end_char)
+m10_10_10[,4] <- tweet_time
+
+colnames(m10_10_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_10_2019 <- rbind(m10_10_1, m10_10_2, m10_10_3, m10_10_4, m10_10_5, m10_10_6, m10_10_7, m10_10_8, m10_10_9, m10_10_10)
+write.csv(Twitter_data_10_10_2019, "Twitter_data_10_10_2019.csv", row.names = FALSE)
+
+
+
+
+
+#10_12_2019:
+#Next sample:
+t10_12_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_1.csv")
+t10_12_1<-as.data.frame(t10_12_1)
+t10_12_1$extra <- 0
+m10_12_1 <- matrix(ncol = 4, nrow = nrow(t10_12_1))
+m10_12_1[,1] <- 1:(nrow(m10_12_1))
+
+start_char <- regexpr(pattern = 'text', t10_12_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_1[,1], start_char, end_char)
+m10_12_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_1[,1], start_char, end_char)
+m10_12_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_1[,1], start_char, end_char)
+m10_12_1[,4] <- tweet_time
+
+colnames(m10_12_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_2.csv")
+t10_12_2<-as.data.frame(t10_12_2)
+t10_12_2$extra <- 0
+m10_12_2 <- matrix(ncol = 4, nrow = nrow(t10_12_2))
+m10_12_2[,1] <- 1:(nrow(m10_12_2))
+
+start_char <- regexpr(pattern = 'text', t10_12_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_2[,1], start_char, end_char)
+m10_12_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_2[,1], start_char, end_char)
+m10_12_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_2[,1], start_char, end_char)
+m10_12_2[,4] <- tweet_time
+
+colnames(m10_12_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_3.csv")
+t10_12_3<-as.data.frame(t10_12_3)
+t10_12_3$extra <- 0
+m10_12_3 <- matrix(ncol = 4, nrow = nrow(t10_12_3))
+m10_12_3[,1] <- 1:(nrow(m10_12_3))
+
+start_char <- regexpr(pattern = 'text', t10_12_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_3[,1], start_char, end_char)
+m10_12_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_3[,1], start_char, end_char)
+m10_12_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_3[,1], start_char, end_char)
+m10_12_3[,4] <- tweet_time
+
+colnames(m10_12_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_4.csv")
+t10_12_4<-as.data.frame(t10_12_4)
+t10_12_4$extra <- 0
+m10_12_4 <- matrix(ncol = 4, nrow = nrow(t10_12_4))
+m10_12_4[,1] <- 1:(nrow(m10_12_4))
+
+start_char <- regexpr(pattern = 'text', t10_12_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_4[,1], start_char, end_char)
+m10_12_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_4[,1], start_char, end_char)
+m10_12_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_4[,1], start_char, end_char)
+m10_12_4[,4] <- tweet_time
+
+colnames(m10_12_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_5.csv")
+t10_12_5<-as.data.frame(t10_12_5)
+t10_12_5$extra <- 0
+m10_12_5 <- matrix(ncol = 4, nrow = nrow(t10_12_5))
+m10_12_5[,1] <- 1:(nrow(m10_12_5))
+
+start_char <- regexpr(pattern = 'text', t10_12_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_5[,1], start_char, end_char)
+m10_12_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_5[,1], start_char, end_char)
+m10_12_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_5[,1], start_char, end_char)
+m10_12_5[,4] <- tweet_time
+
+colnames(m10_12_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_6.csv")
+t10_12_6<-as.data.frame(t10_12_6)
+t10_12_6$extra <- 0
+m10_12_6 <- matrix(ncol = 4, nrow = nrow(t10_12_6))
+m10_12_6[,1] <- 1:(nrow(m10_12_6))
+
+start_char <- regexpr(pattern = 'text', t10_12_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_6[,1], start_char, end_char)
+m10_12_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_6[,1], start_char, end_char)
+m10_12_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_6[,1], start_char, end_char)
+m10_12_6[,4] <- tweet_time
+
+colnames(m10_12_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_7.csv")
+t10_12_7<-as.data.frame(t10_12_7)
+t10_12_7$extra <- 0
+m10_12_7 <- matrix(ncol = 4, nrow = nrow(t10_12_7))
+m10_12_7[,1] <- 1:(nrow(m10_12_7))
+
+start_char <- regexpr(pattern = 'text', t10_12_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_7[,1], start_char, end_char)
+m10_12_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_7[,1], start_char, end_char)
+m10_12_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_7[,1], start_char, end_char)
+m10_12_7[,4] <- tweet_time
+
+colnames(m10_12_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_8.csv")
+t10_12_8<-as.data.frame(t10_12_8)
+t10_12_8$extra <- 0
+m10_12_8 <- matrix(ncol = 4, nrow = nrow(t10_12_8))
+m10_12_8[,1] <- 1:(nrow(m10_12_8))
+
+start_char <- regexpr(pattern = 'text', t10_12_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_8[,1], start_char, end_char)
+m10_12_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_8[,1], start_char, end_char)
+m10_12_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_8[,1], start_char, end_char)
+m10_12_8[,4] <- tweet_time
+
+colnames(m10_12_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_9.csv")
+t10_12_9<-as.data.frame(t10_12_9)
+t10_12_9$extra <- 0
+m10_12_9 <- matrix(ncol = 4, nrow = nrow(t10_12_9))
+m10_12_9[,1] <- 1:(nrow(m10_12_9))
+
+start_char <- regexpr(pattern = 'text', t10_12_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_9[,1], start_char, end_char)
+m10_12_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_9[,1], start_char, end_char)
+m10_12_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_9[,1], start_char, end_char)
+m10_12_9[,4] <- tweet_time
+
+colnames(m10_12_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_12_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_12_2019/tweets_10_12_2019_json_10.csv")
+t10_12_10<-as.data.frame(t10_12_10)
+t10_12_10$extra <- 0
+m10_12_10 <- matrix(ncol = 4, nrow = nrow(t10_12_10))
+m10_12_10[,1] <- 1:(nrow(m10_12_10))
+
+start_char <- regexpr(pattern = 'text', t10_12_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_12_10[,1], start_char, end_char)
+m10_12_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_12_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_12_10[,1], start_char, end_char)
+m10_12_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_12_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_12_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_12_10[,1], start_char, end_char)
+m10_12_10[,4] <- tweet_time
+
+colnames(m10_12_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_12_2019 <- rbind(m10_12_1, m10_12_2, m10_12_3, m10_12_4, m10_12_5, m10_12_6, m10_12_7, m10_12_8, m10_12_9, m10_12_10)
+write.csv(Twitter_data_10_12_2019, "Twitter_data_10_12_2019.csv", row.names = FALSE)
+
+
+
+#10_13_2019:
+#Next sample:
+t10_13_1 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_1.csv")
+t10_13_1<-as.data.frame(t10_13_1)
+t10_13_1$extra <- 0
+m10_13_1 <- matrix(ncol = 4, nrow = nrow(t10_13_1))
+m10_13_1[,1] <- 1:(nrow(m10_13_1))
+
+start_char <- regexpr(pattern = 'text', t10_13_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_1[,1], start_char, end_char)
+m10_13_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_1[,1], start_char, end_char)
+m10_13_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_1[,1], start_char, end_char)
+m10_13_1[,4] <- tweet_time
+colnames(m10_13_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_2 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_2.csv")
+t10_13_2<-as.data.frame(t10_13_2)
+t10_13_2$extra <- 0
+m10_13_2 <- matrix(ncol = 4, nrow = nrow(t10_13_2))
+m10_13_2[,1] <- 1:(nrow(m10_13_2))
+
+start_char <- regexpr(pattern = 'text', t10_13_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_2[,1], start_char, end_char)
+m10_13_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_2[,1], start_char, end_char)
+m10_13_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_2[,1], start_char, end_char)
+m10_13_2[,4] <- tweet_time
+colnames(m10_13_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_3 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_3.csv")
+t10_13_3<-as.data.frame(t10_13_3)
+t10_13_3$extra <- 0
+m10_13_3 <- matrix(ncol = 4, nrow = nrow(t10_13_3))
+m10_13_3[,1] <- 1:(nrow(m10_13_3))
+
+start_char <- regexpr(pattern = 'text', t10_13_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_3[,1], start_char, end_char)
+m10_13_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_3[,1], start_char, end_char)
+m10_13_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_3[,1], start_char, end_char)
+m10_13_3[,4] <- tweet_time
+colnames(m10_13_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_4 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_4.csv")
+t10_13_4<-as.data.frame(t10_13_4)
+t10_13_4$extra <- 0
+m10_13_4 <- matrix(ncol = 4, nrow = nrow(t10_13_4))
+m10_13_4[,1] <- 1:(nrow(m10_13_4))
+
+start_char <- regexpr(pattern = 'text', t10_13_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_4[,1], start_char, end_char)
+m10_13_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_4[,1], start_char, end_char)
+m10_13_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_4[,1], start_char, end_char)
+m10_13_4[,4] <- tweet_time
+colnames(m10_13_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_5 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_5.csv")
+t10_13_5<-as.data.frame(t10_13_5)
+t10_13_5$extra <- 0
+m10_13_5 <- matrix(ncol = 4, nrow = nrow(t10_13_5))
+m10_13_5[,1] <- 1:(nrow(m10_13_5))
+
+start_char <- regexpr(pattern = 'text', t10_13_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_5[,1], start_char, end_char)
+m10_13_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_5[,1], start_char, end_char)
+m10_13_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_5[,1], start_char, end_char)
+m10_13_5[,4] <- tweet_time
+colnames(m10_13_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_6 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_6.csv")
+t10_13_6<-as.data.frame(t10_13_6)
+t10_13_6$extra <- 0
+m10_13_6 <- matrix(ncol = 4, nrow = nrow(t10_13_6))
+m10_13_6[,1] <- 1:(nrow(m10_13_6))
+
+start_char <- regexpr(pattern = 'text', t10_13_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_6[,1], start_char, end_char)
+m10_13_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_6[,1], start_char, end_char)
+m10_13_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_6[,1], start_char, end_char)
+m10_13_6[,4] <- tweet_time
+colnames(m10_13_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_7 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_7.csv")
+t10_13_7<-as.data.frame(t10_13_7)
+t10_13_7$extra <- 0
+m10_13_7 <- matrix(ncol = 4, nrow = nrow(t10_13_7))
+m10_13_7[,1] <- 1:(nrow(m10_13_7))
+
+start_char <- regexpr(pattern = 'text', t10_13_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_7[,1], start_char, end_char)
+m10_13_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_7[,1], start_char, end_char)
+m10_13_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_7[,1], start_char, end_char)
+m10_13_7[,4] <- tweet_time
+colnames(m10_13_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_8 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_8.csv")
+t10_13_8<-as.data.frame(t10_13_8)
+t10_13_8$extra <- 0
+m10_13_8 <- matrix(ncol = 4, nrow = nrow(t10_13_8))
+m10_13_8[,1] <- 1:(nrow(m10_13_8))
+
+start_char <- regexpr(pattern = 'text', t10_13_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_8[,1], start_char, end_char)
+m10_13_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_8[,1], start_char, end_char)
+m10_13_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_8[,1], start_char, end_char)
+m10_13_8[,4] <- tweet_time
+colnames(m10_13_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_9 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_9.csv")
+t10_13_9<-as.data.frame(t10_13_9)
+t10_13_9$extra <- 0
+m10_13_9 <- matrix(ncol = 4, nrow = nrow(t10_13_9))
+m10_13_9[,1] <- 1:(nrow(m10_13_9))
+
+start_char <- regexpr(pattern = 'text', t10_13_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_9[,1], start_char, end_char)
+m10_13_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_9[,1], start_char, end_char)
+m10_13_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_9[,1], start_char, end_char)
+m10_13_9[,4] <- tweet_time
+colnames(m10_13_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Next sample:
+t10_13_10 <- readLines("/Users/dsuolang/Desktop/SURV727\ Fundamentals\ of\ Computing\ and\ Data\ Display/json\ 10_13/tweets_10_13_2019_json_10.csv")
+t10_13_10<-as.data.frame(t10_13_10)
+t10_13_10$extra <- 0
+m10_13_10 <- matrix(ncol = 4, nrow = nrow(t10_13_10))
+m10_13_10[,1] <- 1:(nrow(m10_13_10))
+
+start_char <- regexpr(pattern = 'text', t10_13_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_13_10[,1], start_char, end_char)
+m10_13_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_13_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_13_10[,1], start_char, end_char)
+m10_13_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_13_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_13_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_13_10[,1], start_char, end_char)
+m10_13_10[,4] <- tweet_time
+colnames(m10_13_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+Twitter_data_10_13_2019 <- rbind(m10_13_1, m10_13_2, m10_13_3, m10_13_4, m10_13_5, m10_13_6, m10_13_7, m10_13_8, m10_13_9, m10_13_10)
+write.csv(Twitter_data_10_13_2019, "Twitter_data_10_13_2019.csv", row.names = FALSE)
+
+#10_15_2019:
+#Next sample:
+t10_15_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_1.csv")
+t10_15_1<-as.data.frame(t10_15_1)
+t10_15_1$extra <- 0
+m10_15_1 <- matrix(ncol = 4, nrow = nrow(t10_15_1))
+m10_15_1[,1] <- 1:(nrow(m10_15_1))
+
+start_char <- regexpr(pattern = 'text', t10_15_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_1[,1], start_char, end_char)
+m10_15_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_1[,1], start_char, end_char)
+m10_15_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_1[,1], start_char, end_char)
+m10_15_1[,4] <- tweet_time
+
+colnames(m10_15_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_2.csv")
+t10_15_2<-as.data.frame(t10_15_2)
+t10_15_2$extra <- 0
+m10_15_2 <- matrix(ncol = 4, nrow = nrow(t10_15_2))
+m10_15_2[,1] <- 1:(nrow(m10_15_2))
+
+start_char <- regexpr(pattern = 'text', t10_15_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_2[,1], start_char, end_char)
+m10_15_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_2[,1], start_char, end_char)
+m10_15_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_2[,1], start_char, end_char)
+m10_15_2[,4] <- tweet_time
+
+colnames(m10_15_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_3.csv")
+t10_15_3<-as.data.frame(t10_15_3)
+t10_15_3$extra <- 0
+m10_15_3 <- matrix(ncol = 4, nrow = nrow(t10_15_3))
+m10_15_3[,1] <- 1:(nrow(m10_15_3))
+
+start_char <- regexpr(pattern = 'text', t10_15_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_3[,1], start_char, end_char)
+m10_15_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_3[,1], start_char, end_char)
+m10_15_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_3[,1], start_char, end_char)
+m10_15_3[,4] <- tweet_time
+
+colnames(m10_15_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_4.csv")
+t10_15_4<-as.data.frame(t10_15_4)
+t10_15_4$extra <- 0
+m10_15_4 <- matrix(ncol = 4, nrow = nrow(t10_15_4))
+m10_15_4[,1] <- 1:(nrow(m10_15_4))
+
+start_char <- regexpr(pattern = 'text', t10_15_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_4[,1], start_char, end_char)
+m10_15_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_4[,1], start_char, end_char)
+m10_15_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_4[,1], start_char, end_char)
+m10_15_4[,4] <- tweet_time
+
+colnames(m10_15_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_5.csv")
+t10_15_5<-as.data.frame(t10_15_5)
+t10_15_5$extra <- 0
+m10_15_5 <- matrix(ncol = 4, nrow = nrow(t10_15_5))
+m10_15_5[,1] <- 1:(nrow(m10_15_5))
+
+start_char <- regexpr(pattern = 'text', t10_15_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_5[,1], start_char, end_char)
+m10_15_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_5[,1], start_char, end_char)
+m10_15_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_5[,1], start_char, end_char)
+m10_15_5[,4] <- tweet_time
+
+colnames(m10_15_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_6.csv")
+t10_15_6<-as.data.frame(t10_15_6)
+t10_15_6$extra <- 0
+m10_15_6 <- matrix(ncol = 4, nrow = nrow(t10_15_6))
+m10_15_6[,1] <- 1:(nrow(m10_15_6))
+
+start_char <- regexpr(pattern = 'text', t10_15_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_6[,1], start_char, end_char)
+m10_15_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_6[,1], start_char, end_char)
+m10_15_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_6[,1], start_char, end_char)
+m10_15_6[,4] <- tweet_time
+
+colnames(m10_15_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_7.csv")
+t10_15_7<-as.data.frame(t10_15_7)
+t10_15_7$extra <- 0
+m10_15_7 <- matrix(ncol = 4, nrow = nrow(t10_15_7))
+m10_15_7[,1] <- 1:(nrow(m10_15_7))
+
+start_char <- regexpr(pattern = 'text', t10_15_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_7[,1], start_char, end_char)
+m10_15_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_7[,1], start_char, end_char)
+m10_15_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_7[,1], start_char, end_char)
+m10_15_7[,4] <- tweet_time
+
+colnames(m10_15_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_8.csv")
+t10_15_8<-as.data.frame(t10_15_8)
+t10_15_8$extra <- 0
+m10_15_8 <- matrix(ncol = 4, nrow = nrow(t10_15_8))
+m10_15_8[,1] <- 1:(nrow(m10_15_8))
+
+start_char <- regexpr(pattern = 'text', t10_15_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_8[,1], start_char, end_char)
+m10_15_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_8[,1], start_char, end_char)
+m10_15_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_8[,1], start_char, end_char)
+m10_15_8[,4] <- tweet_time
+
+colnames(m10_15_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_9.csv")
+t10_15_9<-as.data.frame(t10_15_9)
+t10_15_9$extra <- 0
+m10_15_9 <- matrix(ncol = 4, nrow = nrow(t10_15_9))
+m10_15_9[,1] <- 1:(nrow(m10_15_9))
+
+start_char <- regexpr(pattern = 'text', t10_15_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_9[,1], start_char, end_char)
+m10_15_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_9[,1], start_char, end_char)
+m10_15_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_9[,1], start_char, end_char)
+m10_15_9[,4] <- tweet_time
+
+colnames(m10_15_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_15_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_15_2019/tweets_10_15_2019_json_10.csv")
+t10_15_10<-as.data.frame(t10_15_10)
+t10_15_10$extra <- 0
+m10_15_10 <- matrix(ncol = 4, nrow = nrow(t10_15_10))
+m10_15_10[,1] <- 1:(nrow(m10_15_10))
+
+start_char <- regexpr(pattern = 'text', t10_15_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_15_10[,1], start_char, end_char)
+m10_15_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_15_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_15_10[,1], start_char, end_char)
+m10_15_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_15_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_15_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_15_10[,1], start_char, end_char)
+m10_15_10[,4] <- tweet_time
+
+colnames(m10_15_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_15_2019 <- rbind(m10_15_1, m10_15_2, m10_15_3, m10_15_4, m10_15_5, m10_15_6, m10_15_7, m10_15_8, m10_15_9, m10_15_10)
+write.csv(Twitter_data_10_15_2019, "Twitter_data_10_15_2019.csv", row.names = FALSE)
+
+
+
+#10_16_2019:
+#Next sample:
+t10_16_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_1.csv")
+t10_16_1<-as.data.frame(t10_16_1)
+t10_16_1$extra <- 0
+m10_16_1 <- matrix(ncol = 4, nrow = nrow(t10_16_1))
+m10_16_1[,1] <- 1:(nrow(m10_16_1))
+
+start_char <- regexpr(pattern = 'text', t10_16_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_1[,1], start_char, end_char)
+m10_16_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_1[,1], start_char, end_char)
+m10_16_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_1[,1], start_char, end_char)
+m10_16_1[,4] <- tweet_time
+
+colnames(m10_16_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_2.csv")
+t10_16_2<-as.data.frame(t10_16_2)
+t10_16_2$extra <- 0
+m10_16_2 <- matrix(ncol = 4, nrow = nrow(t10_16_2))
+m10_16_2[,1] <- 1:(nrow(m10_16_2))
+
+start_char <- regexpr(pattern = 'text', t10_16_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_2[,1], start_char, end_char)
+m10_16_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_2[,1], start_char, end_char)
+m10_16_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_2[,1], start_char, end_char)
+m10_16_2[,4] <- tweet_time
+
+colnames(m10_16_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_3.csv")
+t10_16_3<-as.data.frame(t10_16_3)
+t10_16_3$extra <- 0
+m10_16_3 <- matrix(ncol = 4, nrow = nrow(t10_16_3))
+m10_16_3[,1] <- 1:(nrow(m10_16_3))
+
+start_char <- regexpr(pattern = 'text', t10_16_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_3[,1], start_char, end_char)
+m10_16_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_3[,1], start_char, end_char)
+m10_16_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_3[,1], start_char, end_char)
+m10_16_3[,4] <- tweet_time
+
+colnames(m10_16_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_4.csv")
+t10_16_4<-as.data.frame(t10_16_4)
+t10_16_4$extra <- 0
+m10_16_4 <- matrix(ncol = 4, nrow = nrow(t10_16_4))
+m10_16_4[,1] <- 1:(nrow(m10_16_4))
+
+start_char <- regexpr(pattern = 'text', t10_16_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_4[,1], start_char, end_char)
+m10_16_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_4[,1], start_char, end_char)
+m10_16_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_4[,1], start_char, end_char)
+m10_16_4[,4] <- tweet_time
+
+colnames(m10_16_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_5.csv")
+t10_16_5<-as.data.frame(t10_16_5)
+t10_16_5$extra <- 0
+m10_16_5 <- matrix(ncol = 4, nrow = nrow(t10_16_5))
+m10_16_5[,1] <- 1:(nrow(m10_16_5))
+
+start_char <- regexpr(pattern = 'text', t10_16_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_5[,1], start_char, end_char)
+m10_16_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_5[,1], start_char, end_char)
+m10_16_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_5[,1], start_char, end_char)
+m10_16_5[,4] <- tweet_time
+
+colnames(m10_16_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_6.csv")
+t10_16_6<-as.data.frame(t10_16_6)
+t10_16_6$extra <- 0
+m10_16_6 <- matrix(ncol = 4, nrow = nrow(t10_16_6))
+m10_16_6[,1] <- 1:(nrow(m10_16_6))
+
+start_char <- regexpr(pattern = 'text', t10_16_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_6[,1], start_char, end_char)
+m10_16_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_6[,1], start_char, end_char)
+m10_16_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_6[,1], start_char, end_char)
+m10_16_6[,4] <- tweet_time
+
+colnames(m10_16_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_7.csv")
+t10_16_7<-as.data.frame(t10_16_7)
+t10_16_7$extra <- 0
+m10_16_7 <- matrix(ncol = 4, nrow = nrow(t10_16_7))
+m10_16_7[,1] <- 1:(nrow(m10_16_7))
+
+start_char <- regexpr(pattern = 'text', t10_16_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_7[,1], start_char, end_char)
+m10_16_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_7[,1], start_char, end_char)
+m10_16_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_7[,1], start_char, end_char)
+m10_16_7[,4] <- tweet_time
+
+colnames(m10_16_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_8.csv")
+t10_16_8<-as.data.frame(t10_16_8)
+t10_16_8$extra <- 0
+m10_16_8 <- matrix(ncol = 4, nrow = nrow(t10_16_8))
+m10_16_8[,1] <- 1:(nrow(m10_16_8))
+
+start_char <- regexpr(pattern = 'text', t10_16_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_8[,1], start_char, end_char)
+m10_16_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_8[,1], start_char, end_char)
+m10_16_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_8[,1], start_char, end_char)
+m10_16_8[,4] <- tweet_time
+
+colnames(m10_16_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_9.csv")
+t10_16_9<-as.data.frame(t10_16_9)
+t10_16_9$extra <- 0
+m10_16_9 <- matrix(ncol = 4, nrow = nrow(t10_16_9))
+m10_16_9[,1] <- 1:(nrow(m10_16_9))
+
+start_char <- regexpr(pattern = 'text', t10_16_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_9[,1], start_char, end_char)
+m10_16_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_9[,1], start_char, end_char)
+m10_16_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_9[,1], start_char, end_char)
+m10_16_9[,4] <- tweet_time
+
+colnames(m10_16_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_16_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_16_2019/tweets_10_16_2019_json_10.csv")
+t10_16_10<-as.data.frame(t10_16_10)
+t10_16_10$extra <- 0
+m10_16_10 <- matrix(ncol = 4, nrow = nrow(t10_16_10))
+m10_16_10[,1] <- 1:(nrow(m10_16_10))
+
+start_char <- regexpr(pattern = 'text', t10_16_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_16_10[,1], start_char, end_char)
+m10_16_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_16_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_16_10[,1], start_char, end_char)
+m10_16_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_16_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_16_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_16_10[,1], start_char, end_char)
+m10_16_10[,4] <- tweet_time
+
+colnames(m10_16_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_16_2019 <- rbind(m10_16_1, m10_16_2, m10_16_3, m10_16_4, m10_16_5, m10_16_6, m10_16_7, m10_16_8, m10_16_9, m10_16_10)
+write.csv(Twitter_data_10_16_2019, "Twitter_data_10_16_2019.csv", row.names = FALSE)
+
+
+
+
+
+#10_18_2019:
+#Next sample:
+t10_18_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_1.csv")
+t10_18_1<-as.data.frame(t10_18_1)
+t10_18_1$extra <- 0
+m10_18_1 <- matrix(ncol = 4, nrow = nrow(t10_18_1))
+m10_18_1[,1] <- 1:(nrow(m10_18_1))
+
+start_char <- regexpr(pattern = 'text', t10_18_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_1[,1], start_char, end_char)
+m10_18_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_1[,1], start_char, end_char)
+m10_18_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_1[,1], start_char, end_char)
+m10_18_1[,4] <- tweet_time
+
+colnames(m10_18_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_2.csv")
+t10_18_2<-as.data.frame(t10_18_2)
+t10_18_2$extra <- 0
+m10_18_2 <- matrix(ncol = 4, nrow = nrow(t10_18_2))
+m10_18_2[,1] <- 1:(nrow(m10_18_2))
+
+start_char <- regexpr(pattern = 'text', t10_18_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_2[,1], start_char, end_char)
+m10_18_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_2[,1], start_char, end_char)
+m10_18_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_2[,1], start_char, end_char)
+m10_18_2[,4] <- tweet_time
+
+colnames(m10_18_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_3.csv")
+t10_18_3<-as.data.frame(t10_18_3)
+t10_18_3$extra <- 0
+m10_18_3 <- matrix(ncol = 4, nrow = nrow(t10_18_3))
+m10_18_3[,1] <- 1:(nrow(m10_18_3))
+
+start_char <- regexpr(pattern = 'text', t10_18_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_3[,1], start_char, end_char)
+m10_18_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_3[,1], start_char, end_char)
+m10_18_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_3[,1], start_char, end_char)
+m10_18_3[,4] <- tweet_time
+
+colnames(m10_18_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_4.csv")
+t10_18_4<-as.data.frame(t10_18_4)
+t10_18_4$extra <- 0
+m10_18_4 <- matrix(ncol = 4, nrow = nrow(t10_18_4))
+m10_18_4[,1] <- 1:(nrow(m10_18_4))
+
+start_char <- regexpr(pattern = 'text', t10_18_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_4[,1], start_char, end_char)
+m10_18_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_4[,1], start_char, end_char)
+m10_18_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_4[,1], start_char, end_char)
+m10_18_4[,4] <- tweet_time
+
+colnames(m10_18_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_5.csv")
+t10_18_5<-as.data.frame(t10_18_5)
+t10_18_5$extra <- 0
+m10_18_5 <- matrix(ncol = 4, nrow = nrow(t10_18_5))
+m10_18_5[,1] <- 1:(nrow(m10_18_5))
+
+start_char <- regexpr(pattern = 'text', t10_18_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_5[,1], start_char, end_char)
+m10_18_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_5[,1], start_char, end_char)
+m10_18_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_5[,1], start_char, end_char)
+m10_18_5[,4] <- tweet_time
+
+colnames(m10_18_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_6.csv")
+t10_18_6<-as.data.frame(t10_18_6)
+t10_18_6$extra <- 0
+m10_18_6 <- matrix(ncol = 4, nrow = nrow(t10_18_6))
+m10_18_6[,1] <- 1:(nrow(m10_18_6))
+
+start_char <- regexpr(pattern = 'text', t10_18_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_6[,1], start_char, end_char)
+m10_18_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_6[,1], start_char, end_char)
+m10_18_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_6[,1], start_char, end_char)
+m10_18_6[,4] <- tweet_time
+
+colnames(m10_18_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_7.csv")
+t10_18_7<-as.data.frame(t10_18_7)
+t10_18_7$extra <- 0
+m10_18_7 <- matrix(ncol = 4, nrow = nrow(t10_18_7))
+m10_18_7[,1] <- 1:(nrow(m10_18_7))
+
+start_char <- regexpr(pattern = 'text', t10_18_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_7[,1], start_char, end_char)
+m10_18_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_7[,1], start_char, end_char)
+m10_18_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_7[,1], start_char, end_char)
+m10_18_7[,4] <- tweet_time
+
+colnames(m10_18_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_8.csv")
+t10_18_8<-as.data.frame(t10_18_8)
+t10_18_8$extra <- 0
+m10_18_8 <- matrix(ncol = 4, nrow = nrow(t10_18_8))
+m10_18_8[,1] <- 1:(nrow(m10_18_8))
+
+start_char <- regexpr(pattern = 'text', t10_18_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_8[,1], start_char, end_char)
+m10_18_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_8[,1], start_char, end_char)
+m10_18_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_8[,1], start_char, end_char)
+m10_18_8[,4] <- tweet_time
+
+colnames(m10_18_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_9.csv")
+t10_18_9<-as.data.frame(t10_18_9)
+t10_18_9$extra <- 0
+m10_18_9 <- matrix(ncol = 4, nrow = nrow(t10_18_9))
+m10_18_9[,1] <- 1:(nrow(m10_18_9))
+
+start_char <- regexpr(pattern = 'text', t10_18_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_9[,1], start_char, end_char)
+m10_18_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_9[,1], start_char, end_char)
+m10_18_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_9[,1], start_char, end_char)
+m10_18_9[,4] <- tweet_time
+
+colnames(m10_18_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_18_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_18_2019/tweets_10_18_2019_json_10.csv")
+t10_18_10<-as.data.frame(t10_18_10)
+t10_18_10$extra <- 0
+m10_18_10 <- matrix(ncol = 4, nrow = nrow(t10_18_10))
+m10_18_10[,1] <- 1:(nrow(m10_18_10))
+
+start_char <- regexpr(pattern = 'text', t10_18_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_18_10[,1], start_char, end_char)
+m10_18_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_18_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_18_10[,1], start_char, end_char)
+m10_18_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_18_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_18_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_18_10[,1], start_char, end_char)
+m10_18_10[,4] <- tweet_time
+
+colnames(m10_18_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_18_2019 <- rbind(m10_18_1, m10_18_2, m10_18_3, m10_18_4, m10_18_5, m10_18_6, m10_18_7, m10_18_8, m10_18_9, m10_18_10)
+write.csv(Twitter_data_10_18_2019, "Twitter_data_10_18_2019.csv", row.names = FALSE)
+
+
+
+
+
+#10_19_2019:
+#Next sample:
+t10_19_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_1.csv")
+t10_19_1<-as.data.frame(t10_19_1)
+t10_19_1$extra <- 0
+m10_19_1 <- matrix(ncol = 4, nrow = nrow(t10_19_1))
+m10_19_1[,1] <- 1:(nrow(m10_19_1))
+
+start_char <- regexpr(pattern = 'text', t10_19_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_1[,1], start_char, end_char)
+m10_19_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_1[,1], start_char, end_char)
+m10_19_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_1[,1], start_char, end_char)
+m10_19_1[,4] <- tweet_time
+
+colnames(m10_19_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_2.csv")
+t10_19_2<-as.data.frame(t10_19_2)
+t10_19_2$extra <- 0
+m10_19_2 <- matrix(ncol = 4, nrow = nrow(t10_19_2))
+m10_19_2[,1] <- 1:(nrow(m10_19_2))
+
+start_char <- regexpr(pattern = 'text', t10_19_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_2[,1], start_char, end_char)
+m10_19_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_2[,1], start_char, end_char)
+m10_19_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_2[,1], start_char, end_char)
+m10_19_2[,4] <- tweet_time
+
+colnames(m10_19_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_3.csv")
+t10_19_3<-as.data.frame(t10_19_3)
+t10_19_3$extra <- 0
+m10_19_3 <- matrix(ncol = 4, nrow = nrow(t10_19_3))
+m10_19_3[,1] <- 1:(nrow(m10_19_3))
+
+start_char <- regexpr(pattern = 'text', t10_19_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_3[,1], start_char, end_char)
+m10_19_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_3[,1], start_char, end_char)
+m10_19_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_3[,1], start_char, end_char)
+m10_19_3[,4] <- tweet_time
+
+colnames(m10_19_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_4.csv")
+t10_19_4<-as.data.frame(t10_19_4)
+t10_19_4$extra <- 0
+m10_19_4 <- matrix(ncol = 4, nrow = nrow(t10_19_4))
+m10_19_4[,1] <- 1:(nrow(m10_19_4))
+
+start_char <- regexpr(pattern = 'text', t10_19_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_4[,1], start_char, end_char)
+m10_19_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_4[,1], start_char, end_char)
+m10_19_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_4[,1], start_char, end_char)
+m10_19_4[,4] <- tweet_time
+
+colnames(m10_19_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_5.csv")
+t10_19_5<-as.data.frame(t10_19_5)
+t10_19_5$extra <- 0
+m10_19_5 <- matrix(ncol = 4, nrow = nrow(t10_19_5))
+m10_19_5[,1] <- 1:(nrow(m10_19_5))
+
+start_char <- regexpr(pattern = 'text', t10_19_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_5[,1], start_char, end_char)
+m10_19_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_5[,1], start_char, end_char)
+m10_19_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_5[,1], start_char, end_char)
+m10_19_5[,4] <- tweet_time
+
+colnames(m10_19_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_6.csv")
+t10_19_6<-as.data.frame(t10_19_6)
+t10_19_6$extra <- 0
+m10_19_6 <- matrix(ncol = 4, nrow = nrow(t10_19_6))
+m10_19_6[,1] <- 1:(nrow(m10_19_6))
+
+start_char <- regexpr(pattern = 'text', t10_19_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_6[,1], start_char, end_char)
+m10_19_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_6[,1], start_char, end_char)
+m10_19_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_6[,1], start_char, end_char)
+m10_19_6[,4] <- tweet_time
+
+colnames(m10_19_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_7.csv")
+t10_19_7<-as.data.frame(t10_19_7)
+t10_19_7$extra <- 0
+m10_19_7 <- matrix(ncol = 4, nrow = nrow(t10_19_7))
+m10_19_7[,1] <- 1:(nrow(m10_19_7))
+
+start_char <- regexpr(pattern = 'text', t10_19_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_7[,1], start_char, end_char)
+m10_19_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_7[,1], start_char, end_char)
+m10_19_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_7[,1], start_char, end_char)
+m10_19_7[,4] <- tweet_time
+
+colnames(m10_19_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_8.csv")
+t10_19_8<-as.data.frame(t10_19_8)
+t10_19_8$extra <- 0
+m10_19_8 <- matrix(ncol = 4, nrow = nrow(t10_19_8))
+m10_19_8[,1] <- 1:(nrow(m10_19_8))
+
+start_char <- regexpr(pattern = 'text', t10_19_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_8[,1], start_char, end_char)
+m10_19_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_8[,1], start_char, end_char)
+m10_19_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_8[,1], start_char, end_char)
+m10_19_8[,4] <- tweet_time
+
+colnames(m10_19_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_9.csv")
+t10_19_9<-as.data.frame(t10_19_9)
+t10_19_9$extra <- 0
+m10_19_9 <- matrix(ncol = 4, nrow = nrow(t10_19_9))
+m10_19_9[,1] <- 1:(nrow(m10_19_9))
+
+start_char <- regexpr(pattern = 'text', t10_19_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_9[,1], start_char, end_char)
+m10_19_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_9[,1], start_char, end_char)
+m10_19_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_9[,1], start_char, end_char)
+m10_19_9[,4] <- tweet_time
+
+colnames(m10_19_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_19_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_19_2019/tweets_10_19_2019_json_10.csv")
+t10_19_10<-as.data.frame(t10_19_10)
+t10_19_10$extra <- 0
+m10_19_10 <- matrix(ncol = 4, nrow = nrow(t10_19_10))
+m10_19_10[,1] <- 1:(nrow(m10_19_10))
+
+start_char <- regexpr(pattern = 'text', t10_19_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_19_10[,1], start_char, end_char)
+m10_19_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_19_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_19_10[,1], start_char, end_char)
+m10_19_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_19_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_19_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_19_10[,1], start_char, end_char)
+m10_19_10[,4] <- tweet_time
+
+colnames(m10_19_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_19_2019 <- rbind(m10_19_1, m10_19_2, m10_19_3, m10_19_4, m10_19_5, m10_19_6, m10_19_7, m10_19_8, m10_19_9, m10_19_10)
+write.csv(Twitter_data_10_19_2019, "Twitter_data_10_19_2019.csv", row.names = FALSE)
+
+
+
+#10_20_2019:
+#Next sample:
+t10_20_1 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_1.csv")
+t10_20_1<-as.data.frame(t10_20_1)
+t10_20_1$extra <- 0
+m10_20_1 <- matrix(ncol = 4, nrow = nrow(t10_20_1))
+m10_20_1[,1] <- 1:(nrow(m10_20_1))
+
+start_char <- regexpr(pattern = 'text', t10_20_1[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_1[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_1[,1], start_char, end_char)
+m10_20_1[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_1[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_1[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_1[,1], start_char, end_char)
+m10_20_1[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_1[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_1[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_1[,1], start_char, end_char)
+m10_20_1[,4] <- tweet_time
+
+colnames(m10_20_1) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_2 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_2.csv")
+t10_20_2<-as.data.frame(t10_20_2)
+t10_20_2$extra <- 0
+m10_20_2 <- matrix(ncol = 4, nrow = nrow(t10_20_2))
+m10_20_2[,1] <- 1:(nrow(m10_20_2))
+
+start_char <- regexpr(pattern = 'text', t10_20_2[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_2[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_2[,1], start_char, end_char)
+m10_20_2[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_2[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_2[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_2[,1], start_char, end_char)
+m10_20_2[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_2[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_2[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_2[,1], start_char, end_char)
+m10_20_2[,4] <- tweet_time
+
+colnames(m10_20_2) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_3 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_3.csv")
+t10_20_3<-as.data.frame(t10_20_3)
+t10_20_3$extra <- 0
+m10_20_3 <- matrix(ncol = 4, nrow = nrow(t10_20_3))
+m10_20_3[,1] <- 1:(nrow(m10_20_3))
+
+start_char <- regexpr(pattern = 'text', t10_20_3[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_3[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_3[,1], start_char, end_char)
+m10_20_3[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_3[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_3[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_3[,1], start_char, end_char)
+m10_20_3[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_3[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_3[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_3[,1], start_char, end_char)
+m10_20_3[,4] <- tweet_time
+
+colnames(m10_20_3) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_4 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_4.csv")
+t10_20_4<-as.data.frame(t10_20_4)
+t10_20_4$extra <- 0
+m10_20_4 <- matrix(ncol = 4, nrow = nrow(t10_20_4))
+m10_20_4[,1] <- 1:(nrow(m10_20_4))
+
+start_char <- regexpr(pattern = 'text', t10_20_4[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_4[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_4[,1], start_char, end_char)
+m10_20_4[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_4[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_4[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_4[,1], start_char, end_char)
+m10_20_4[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_4[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_4[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_4[,1], start_char, end_char)
+m10_20_4[,4] <- tweet_time
+
+colnames(m10_20_4) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_5 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_5.csv")
+t10_20_5<-as.data.frame(t10_20_5)
+t10_20_5$extra <- 0
+m10_20_5 <- matrix(ncol = 4, nrow = nrow(t10_20_5))
+m10_20_5[,1] <- 1:(nrow(m10_20_5))
+
+start_char <- regexpr(pattern = 'text', t10_20_5[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_5[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_5[,1], start_char, end_char)
+m10_20_5[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_5[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_5[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_5[,1], start_char, end_char)
+m10_20_5[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_5[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_5[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_5[,1], start_char, end_char)
+m10_20_5[,4] <- tweet_time
+
+colnames(m10_20_5) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_6 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_6.csv")
+t10_20_6<-as.data.frame(t10_20_6)
+t10_20_6$extra <- 0
+m10_20_6 <- matrix(ncol = 4, nrow = nrow(t10_20_6))
+m10_20_6[,1] <- 1:(nrow(m10_20_6))
+
+start_char <- regexpr(pattern = 'text', t10_20_6[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_6[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_6[,1], start_char, end_char)
+m10_20_6[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_6[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_6[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_6[,1], start_char, end_char)
+m10_20_6[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_6[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_6[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_6[,1], start_char, end_char)
+m10_20_6[,4] <- tweet_time
+
+colnames(m10_20_6) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_7 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_7.csv")
+t10_20_7<-as.data.frame(t10_20_7)
+t10_20_7$extra <- 0
+m10_20_7 <- matrix(ncol = 4, nrow = nrow(t10_20_7))
+m10_20_7[,1] <- 1:(nrow(m10_20_7))
+
+start_char <- regexpr(pattern = 'text', t10_20_7[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_7[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_7[,1], start_char, end_char)
+m10_20_7[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_7[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_7[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_7[,1], start_char, end_char)
+m10_20_7[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_7[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_7[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_7[,1], start_char, end_char)
+m10_20_7[,4] <- tweet_time
+
+colnames(m10_20_7) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_8 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_8.csv")
+t10_20_8<-as.data.frame(t10_20_8)
+t10_20_8$extra <- 0
+m10_20_8 <- matrix(ncol = 4, nrow = nrow(t10_20_8))
+m10_20_8[,1] <- 1:(nrow(m10_20_8))
+
+start_char <- regexpr(pattern = 'text', t10_20_8[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_8[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_8[,1], start_char, end_char)
+m10_20_8[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_8[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_8[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_8[,1], start_char, end_char)
+m10_20_8[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_8[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_8[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_8[,1], start_char, end_char)
+m10_20_8[,4] <- tweet_time
+
+colnames(m10_20_8) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_9 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_9.csv")
+t10_20_9<-as.data.frame(t10_20_9)
+t10_20_9$extra <- 0
+m10_20_9 <- matrix(ncol = 4, nrow = nrow(t10_20_9))
+m10_20_9[,1] <- 1:(nrow(m10_20_9))
+
+start_char <- regexpr(pattern = 'text', t10_20_9[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_9[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_9[,1], start_char, end_char)
+m10_20_9[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_9[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_9[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_9[,1], start_char, end_char)
+m10_20_9[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_9[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_9[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_9[,1], start_char, end_char)
+m10_20_9[,4] <- tweet_time
+
+colnames(m10_20_9) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+
+#Next sample:
+t10_20_10 <- readLines("C:/Users/ketenci/Desktop/Kaan Cem/727 Project/10_20_2019/tweets_10_20_2019_json_10.csv")
+t10_20_10<-as.data.frame(t10_20_10)
+t10_20_10$extra <- 0
+m10_20_10 <- matrix(ncol = 4, nrow = nrow(t10_20_10))
+m10_20_10[,1] <- 1:(nrow(m10_20_10))
+
+start_char <- regexpr(pattern = 'text', t10_20_10[,1])+4+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_10[,1], start_char, 10000)) -2
+tweet_text <- substr(t10_20_10[,1], start_char, end_char)
+m10_20_10[,2] <- tweet_text
+
+start_char <- regexpr(pattern = 'location', t10_20_10[,1])+8+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_10[,1], start_char, 10000)) -2
+tweet_location <- substr(t10_20_10[,1], start_char, end_char)
+m10_20_10[,3] <- tweet_location
+
+start_char <- regexpr(pattern = 'created_at', t10_20_10[,1])+10+3
+end_char <- start_char + regexpr(pattern = '\"', substr(t10_20_10[,1], start_char, 10000)) -2
+tweet_time <- substr(t10_20_10[,1], start_char, end_char)
+m10_20_10[,4] <- tweet_time
+
+colnames(m10_20_10) <- c("ID", "tweet_text", "tweet_location", "tweet_time")
+
+#Now, combine all the sampled tweets for this day and save it as a csv file.
+Twitter_data_10_20_2019 <- rbind(m10_20_1, m10_20_2, m10_20_3, m10_20_4, m10_20_5, m10_20_6, m10_20_7, m10_20_8, m10_20_9, m10_20_10)
+write.csv(Twitter_data_10_20_2019, "Twitter_data_10_20_2019.csv", row.names = FALSE)
+
+#install.packages("stringr")
+#library(stringr)
+#library(stringi)
+#today_is_a_good_day_yeeeeey <- substr(MyData[1:(nrow(MyData)),1],regexpr(pattern = 'text', MyData[1:(nrow(MyData)),1])+7,
+#                               regexpr(pattern = 'text', MyData[1:(nrow(MyData)),1])+7 + regexpr(pattern = '\"', #substr(MyData[1:(nrow(MyData)),1],regexpr(pattern = 'text', MyData[1:(nrow(MyData)),1])+7,10000)))
+```
